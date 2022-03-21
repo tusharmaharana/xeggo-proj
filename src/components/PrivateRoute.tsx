@@ -8,7 +8,7 @@ const PrivateRoute = () => {
   return (
     // Show the component only when the user is logged in
     // Otherwise, Navigate the user to /signin page
-    <>{!!user ? <Outlet /> : <Navigate to="/signin" />}</>
+    <>{!!user ? <Outlet /> : <Navigate to="/signin" replace={true} />}</>
   );
 };
 

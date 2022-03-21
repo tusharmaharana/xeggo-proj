@@ -31,7 +31,7 @@ export const AuthForm = () => {
           password: passwordRef.current?.value as string,
         })
       );
-      navigate("todo");
+      navigate("/todo", { replace: true });
     } catch {
       setError("Failed to create an account");
     }
@@ -41,7 +41,7 @@ export const AuthForm = () => {
 
   return (
     <>
-      <Card>
+      <Card style={{ width: "400px" }}>
         <Card.Body>
           <h2 className="text-center mb-4">Sign Up</h2>
           {error && <Alert variant="danger">{error}</Alert>}

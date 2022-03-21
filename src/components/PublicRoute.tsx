@@ -11,7 +11,7 @@ const PublicRoute = ({ restricted }: PublicRouteProps) => {
   return (
     // restricted = false meaning public route
     // restricted = true meaning restricted route
-    <>{!!user && restricted ? <Navigate to="todo" /> : <Outlet />}</>
+    <>{!!user && restricted ? <Navigate to="/todo" /> : <Outlet />}</>
   );
 };
 

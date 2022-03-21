@@ -1,7 +1,9 @@
 import React, { SyntheticEvent, useRef, useState } from "react";
 import { Alert, Button, Card, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../app/hooks";
 import { signUp } from "../features/authSlice";
+import { auth } from "../firebase";
 
 export const AuthForm = () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -10,6 +12,7 @@ export const AuthForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -21,11 +24,14 @@ export const AuthForm = () => {
     try {
       setError("");
       setLoading(true);
-      signUp({
-        email: emailRef.current?.value as string,
-        password: passwordRef.current?.value as string,
-      });
-      navigate("/");
+      dispatch(
+        signUp({
+          auth,
+          email: emailRef.current?.value as string,
+          password: passwordRef.current?.value as string,
+        })
+      );
+      navigate("todo");
     } catch {
       setError("Failed to create an account");
     }

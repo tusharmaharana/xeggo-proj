@@ -1,15 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  UserCredential,
-} from "firebase/auth";
+import { Auth, createUserWithEmailAndPassword, UserInfo } from "firebase/auth";
 
 export interface AuthState {
-  user: UserCredential | null;
+  user: UserInfo | null;
 }
 
 export interface UserInfoType {
+  auth: Auth;
   email: string;
   password: string;
 }
@@ -18,12 +15,15 @@ const initialState: AuthState = {
   user: null,
 };
 
-const auth = getAuth();
-
 export const signUp = createAsyncThunk(
   "auth/createUser",
-  async ({ email, password }: UserInfoType) => {
-    return await createUserWithEmailAndPassword(auth, email, password);
+  async ({ auth, email, password }: UserInfoType) => {
+    const userCredentials = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return userCredentials.user;
   }
 );
 

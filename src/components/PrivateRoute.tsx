@@ -1,23 +1,14 @@
-import React, { ReactElement } from "react";
-import { Navigate, Route } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
 
-interface PrivateRouteProps {
-  component: () => ReactElement;
-  path: string;
-  exact: boolean;
-}
+const PrivateRoute = () => {
+  const user = useAppSelector((state: RootState) => state.auth.user);
 
-// temporary islogin logic
-const isLogin = () => true;
-
-const PrivateRoute = ({ component: Component, ...rest }: PrivateRouteProps) => {
   return (
     // Show the component only when the user is logged in
     // Otherwise, Navigate the user to /signin page
-    <Route
-      {...rest}
-      children={() => (isLogin() ? <Component /> : <Navigate to="/signin" />)}
-    />
+    <>{!!user ? <Outlet /> : <Navigate to="/signin" />}</>
   );
 };
 

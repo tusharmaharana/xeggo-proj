@@ -1,30 +1,17 @@
-import React, { ReactElement } from "react";
-import { Navigate, Route } from "react-router-dom";
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
 
 interface PublicRouteProps {
-  component: () => ReactElement;
   restricted: boolean;
-  path: string;
-  exact: boolean;
 }
-
-// temporary islogin logic
-const isLogin = () => true;
-
-const PublicRoute = ({
-  restricted,
-  component: Component,
-  ...rest
-}: PublicRouteProps) => {
+const PublicRoute = ({ restricted }: PublicRouteProps) => {
+  const user = useAppSelector((state: RootState) => state.auth.user);
   return (
     // restricted = false meaning public route
     // restricted = true meaning restricted route
-    <Route
-      {...rest}
-      children={() =>
-        isLogin() && restricted ? <Navigate to="/todo" /> : <Component />
-      }
-    />
+    <>{!!user && restricted ? <Navigate to="todo" /> : <Outlet />}</>
   );
 };
 

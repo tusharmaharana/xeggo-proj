@@ -1,10 +1,31 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
+import { AppThunk } from "../app/store";
+import { db } from "../firebase";
 
 export interface TodoState {
-  value: string[];
+  status: "loading" | "idle";
+  value: (ITodoIndexProps & IAddProps)[];
+}
+
+export interface IUserIdProps {
+  uid: string;
+}
+export interface ITodoIndexProps {
+  id: string;
+}
+export interface IAddProps {
+  todo: string;
 }
 
 const initialState: TodoState = {
+  status: "idle",
   value: [],
 };
 
@@ -27,13 +48,23 @@ export const todoSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    addTodo: (state, action: PayloadAction<string>) => {
+    addTodo: (state, action: PayloadAction<ITodoIndexProps & IAddProps>) => {
       if (!action.payload) return;
-      state.value.push(action.payload);
+      state.value.push({ id: action.payload.id, todo: action.payload.todo });
     },
-    removeTodo: (state, action: PayloadAction<number>) => {
-      if (typeof action.payload !== "number") return;
-      state.value.splice(action.payload, 1);
+    removeTodo: (state, action: PayloadAction<string>) => {
+      if (typeof action.payload !== "string") return;
+      const index = state.value.findIndex((item) => item.id === action.payload);
+      state.value.splice(index, 1);
+    },
+    setStatus: (state, action: PayloadAction<"loading" | "idle">) => {
+      state.status = action.payload;
+    },
+    setTodoList: (
+      state,
+      action: PayloadAction<(ITodoIndexProps & IAddProps)[]>
+    ) => {
+      state.value = action.payload;
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -50,7 +81,8 @@ export const todoSlice = createSlice({
   // },
 });
 
-export const { addTodo, removeTodo } = todoSlice.actions;
+export const { addTodo, removeTodo, setStatus, setTodoList } =
+  todoSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -59,13 +91,37 @@ export const { addTodo, removeTodo } = todoSlice.actions;
 
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
-// export const incrementIfOdd =
-//   (amount: number): AppThunk =>
-//   (dispatch, getState) => {
-//     const currentValue = selectCount(getState());
-//     if (currentValue % 2 === 1) {
-//       dispatch(incrementByAmount(amount));
-//     }
-//   };
+export const add =
+  ({ uid, todo }: IAddProps & IUserIdProps): AppThunk =>
+  async (dispatch, getState) => {
+    dispatch(setStatus("loading"));
+    const docRef = await addDoc(collection(db, `${uid}`), {
+      todo,
+    });
+    dispatch(addTodo({ id: docRef.id, todo }));
+    dispatch(setStatus("idle"));
+  };
+
+export const remove =
+  ({ uid, id }: IUserIdProps & ITodoIndexProps): AppThunk =>
+  async (dispatch, getState) => {
+    dispatch(setStatus("loading"));
+    await deleteDoc(doc(db, `${uid}`, `${id}`));
+    dispatch(removeTodo(id));
+    dispatch(setStatus("idle"));
+  };
+
+export const setTodo =
+  ({ uid }: IUserIdProps): AppThunk =>
+  async (dispatch) => {
+    const list: (ITodoIndexProps & IAddProps)[] = [];
+    dispatch(setStatus("loading"));
+    const querySnapshot = await getDocs(collection(db, `${uid}`));
+    querySnapshot.forEach((item) => {
+      list.push({ id: item.id, todo: item.data().todo });
+    });
+    dispatch(setTodoList(list));
+    dispatch(setStatus("idle"));
+  };
 
 export default todoSlice.reducer;

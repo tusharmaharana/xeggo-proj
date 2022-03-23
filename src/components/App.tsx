@@ -1,4 +1,3 @@
-// @ts-ignore
 import { onAuthStateChanged, UserInfo } from "firebase/auth";
 import React, { FC, useEffect } from "react";
 import { Container } from "react-bootstrap";

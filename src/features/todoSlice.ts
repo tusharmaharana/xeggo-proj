@@ -94,21 +94,17 @@ export const { addTodo, removeTodo, setStatus, setTodoList } =
 export const add =
   ({ uid, todo }: IAddProps & IUserIdProps): AppThunk =>
   async (dispatch, getState) => {
-    dispatch(setStatus("loading"));
     const docRef = await addDoc(collection(db, `${uid}`), {
       todo,
     });
     dispatch(addTodo({ id: docRef.id, todo }));
-    dispatch(setStatus("idle"));
   };
 
 export const remove =
   ({ uid, id }: IUserIdProps & ITodoIndexProps): AppThunk =>
   async (dispatch, getState) => {
-    dispatch(setStatus("loading"));
     await deleteDoc(doc(db, `${uid}`, `${id}`));
     dispatch(removeTodo(id));
-    dispatch(setStatus("idle"));
   };
 
 export const setTodo =

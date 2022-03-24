@@ -59,7 +59,8 @@ const Todo = () => {
           </Button>
         </InputGroup>
       </StyledForm>
-      <div style={{ width: "70%" }}>
+      <div style={{ width: "70%" }} className="my-5">
+        <h5>All Todo Tasks:</h5>
         {status === "loading" ? <Loader /> : <TodoList />}
       </div>
     </div>

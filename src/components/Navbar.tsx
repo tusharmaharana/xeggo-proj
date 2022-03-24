@@ -43,12 +43,6 @@ const Navbar = (): ReactElement => {
       </div>
       <div className="d-flex justify-content-end">
         <div className="d-flex align-items-center">
-          <StyledButton
-            onClick={(): void => navigate("/todo", { replace: true })}
-          >
-            Todo
-          </StyledButton>
-
           {!!currentUser ? (
             <StyledButton variant="danger" onClick={handleLogOut}>
               Log Out
@@ -65,7 +59,7 @@ const Navbar = (): ReactElement => {
 };
 
 const Nav = styled.div`
-  width: 90%;
+  width: 70%;
   margin: 20px auto;
   padding: 15px;
   border-radius: 15px;

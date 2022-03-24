@@ -25,7 +25,10 @@ const TodoItem = ({ todo }: ITodoItemProps) => {
 
   return (
     <StyledContainer>
-      <Card className="d-flex flex-row justify-content-between border-0 my-3">
+      <Card
+        className="d-flex flex-row justify-content-between border-0 my-3"
+        style={{ backgroundColor: "#f7f7ff88", padding: "10px" }}
+      >
         <Card.Text className="d-inline m-2"> {todo.todo}</Card.Text>
         <StyledButton className="m-2" onClick={() => handleRemoveTodo(todo.id)}>
           {loading ? (
@@ -37,7 +40,6 @@ const TodoItem = ({ todo }: ITodoItemProps) => {
           )}
         </StyledButton>
       </Card>
-      <hr style={{ margin: "-5px 0" }} />
     </StyledContainer>
   );
 };

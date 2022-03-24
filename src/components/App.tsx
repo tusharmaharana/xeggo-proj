@@ -7,13 +7,13 @@ import { RootState } from "../app/store";
 import { setUser } from "../features/authSlice";
 import { setTodo } from "../features/todoSlice";
 import { auth } from "../firebase";
-import Loader from "../widgets/Loader";
 import { AuthForm } from "./AuthForm";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import Todo from "./Todo";
+import Loader from "./widgets/Loader";
 
 const App: FC = () => {
   const authState = useAppSelector((state: RootState) => state.auth);
@@ -38,7 +38,7 @@ const App: FC = () => {
       ) : (
         <>
           <Navbar />
-          <Container>
+          <Container className="d-flex flex-column align-items-center">
             <Routes>
               <Route path="/" element={<PublicRoute restricted={false} />}>
                 <Route path="" element={<Home />} />

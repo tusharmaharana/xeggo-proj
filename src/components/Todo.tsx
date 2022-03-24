@@ -4,8 +4,8 @@ import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { add } from "../features/todoSlice";
-import Loader from "../widgets/Loader";
 import TodoList from "./TodoList";
+import Loader from "./widgets/Loader";
 
 const Todo = () => {
   const uid = useAppSelector(
@@ -36,7 +36,7 @@ const Todo = () => {
   };
 
   return (
-    <div className="d-flex flex-column align-items-center">
+    <div className="d-flex flex-column align-items-center w-100">
       <StyledForm className="" onSubmit={(e) => handleAddTodo(e)}>
         <InputGroup>
           <Form.Control

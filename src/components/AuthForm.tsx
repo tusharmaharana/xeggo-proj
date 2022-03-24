@@ -63,16 +63,16 @@ export const AuthForm = ({ login }: IProps) => {
           <h2 className="text-center mb-4">{login ? "Sign In" : "Sign Up"}</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
-            <Form.Group id="email">
+            <Form.Group id="email" className="my-4">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />
             </Form.Group>
-            <Form.Group id="password">
+            <Form.Group id="password" className="my-4">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
             {!login ? (
-              <Form.Group id="password-confirm">
+              <Form.Group id="password-confirm" className="my-4">
                 <Form.Label>Password Confirmation</Form.Label>
                 <Form.Control
                   type="password"
@@ -81,7 +81,7 @@ export const AuthForm = ({ login }: IProps) => {
                 />
               </Form.Group>
             ) : null}
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading} className="w-100 mb-2" type="submit">
               {login ? "Sign In" : "Sign Up"}
             </Button>
           </Form>
